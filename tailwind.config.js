@@ -1,4 +1,4 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
+// const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   future: {
@@ -7,11 +7,36 @@ module.exports = {
   },
   purge: ["./src/**/*.svelte"],
   theme: {
+    borderWidth: {
+      default: '1px',
+      '0': '0',
+      '2': '2px',
+      '4': '4px',
+      '8': '8px',
+    },
+    colors: {
+      carbon: {
+        '80':'#393939',
+        '90': '#262626',
+        '100': '#161616',
+      }
+    },
     extend: {
       fontFamily: {
-        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+        sans: ['Roboto'],
       },
+      height: theme => ({
+        "screen/2": "50vh",
+        "screen-2/3": "calc(100vh * 2 / 3)",
+        "screen-3/4": "calc(100vh * 3 / 4)",
+        "screen/3": "calc(100vh / 3)",
+        "screen/4": "calc(100vh / 4)",
+        "screen/5": "calc(100vh / 5)",
+      }),
     },
+  },
+  corePlugins: {
+    borderColor: true,
   },
   variants: {},
   plugins: [],
