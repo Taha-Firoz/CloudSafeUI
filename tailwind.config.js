@@ -14,14 +14,20 @@ module.exports = {
       '4': '4px',
       '8': '8px',
     },
-    colors: {
-      carbon: {
-        '80':'#393939',
-        '90': '#262626',
-        '100': '#161616',
-      }
-    },
     extend: {
+      colors: {
+        cablue:{
+          '50':'#4589ff',
+          '60':'#0f62fe',
+          '70':'#0043ce',
+        },
+        carbon: {
+          '70':"#525252",
+          '80':'#393939',
+          '90': '#262626',
+          '100': '#161616',
+        }
+      },
       fontFamily: {
         sans: ['Roboto'],
       },
@@ -38,6 +44,8 @@ module.exports = {
   corePlugins: {
     borderColor: true,
   },
-  variants: {},
+  variants: {
+    textColor: ['responsive', 'hover', 'focus', 'group-hover'],
+  },
   plugins: [],
 };

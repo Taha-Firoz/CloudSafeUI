@@ -19,7 +19,7 @@
       "@rollup/plugin-typescript": "^4.0.0",
       "@tsconfig/svelte": "^1.0.0",
       "autoprefixer": "^9.8.6",
-      "carbon-components-svelte": "^0.15.0",
+      "carbon-components-svelte": "^0.21.0",
       "concurrently": "^5.2.0",
       "cross-env": "^7.0.2",
       "cssnano": "^4.1.10",
@@ -42,7 +42,6 @@
    },
    "dependencies": {
       "@roxi/routify": "^2.1.4-next-major",
-      "brace": "^0.11.1",
       "codemirror": "^5.58.2",
       "fs-extra": "^9.0.1",
       "jsoneditor": "^9.1.1",

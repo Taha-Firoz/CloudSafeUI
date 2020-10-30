@@ -6,7 +6,7 @@
 
 <style  global>
   @import "../assets/global.css";
-  @import "carbon-components-svelte/css/g10";
+  @import "carbon-components-svelte/css/g90";
 </style>
 
 
