@@ -73,10 +73,17 @@
   }
 
   function paginate({ page, pageSize }) {
-    paginated_rows = all_rows.slice((page - 1) * pageSize, page * pageSize);
+    try{
+        paginated_rows = all_rows.slice((page - 1) * pageSize, page * pageSize);
+    }catch(e) {
+        error.set(e);
+    }
   }
 
   function checkPolicy() {
+    if(!ace_editor){
+        error.set("Editor not initialized");
+    }
     try {
       const parsed = JSON.parse(ace_editor.getText());
 
@@ -132,11 +139,11 @@
         {#if fetching === null}
           <Button on:click={checkPolicy} size="small">Update</Button>
         {:else if fetching === 'active'}
-          <InlineLoading status="active" description="Fetching Policy" />
+          <InlineLoading status="active" description="Validate Policy" />
         {:else if fetching === 'finished'}
-          <InlineLoading status="finished" description="Fetch Successful" />
+          <InlineLoading status="finished" description="Validation Successful" />
         {:else if fetching === 'error'}
-          <InlineLoading status="error" description="Failed to Fetch" />
+          <InlineLoading status="error" description="Failed to Validate" />
         {/if}
       </div>
     </div>
@@ -150,7 +157,7 @@
           <div
             class="flex flex-col justify-between h-full"
             on:click={() => {
-              if (item.title !== 'Redundancies' || item.value === '?') {
+              if (!(item.title === 'Redundancies' || item.value === '?')) {
                 item.title === 'Conflicts'? open_weirdo = true: open = true;
                 heading = item.title;
                 headers = item.meta.headers;
