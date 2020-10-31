@@ -42,6 +42,7 @@
    },
    "dependencies": {
       "@roxi/routify": "^2.1.4-next-major",
+      "axios": "^0.21.0",
       "codemirror": "^5.58.2",
       "fs-extra": "^9.0.1",
       "jsoneditor": "^9.1.1",
