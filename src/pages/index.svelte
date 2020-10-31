@@ -11,7 +11,7 @@
     Pagination,
     InlineLoading,
   } from "carbon-components-svelte";
-  import { json_policy_data } from "../stores.js";
+  import { json_policy_data,error } from "../stores.js";
   import { axiosAPI, wait } from "../init_axios";
 
   let open = false;
@@ -81,6 +81,7 @@
       const parsed = JSON.parse(ace_editor.getText());
 
       if (Array.isArray(parsed)) {
+          error.set('Invalid policy format')
         return;
       } else {
         fetching = "active";
@@ -97,11 +98,12 @@
             
           })
           .catch((e) => {
-            wait(2000).then(()=>{fetching = "error";wait(2000).then(() => (fetching = null));})
+            wait(2000).then(()=>{fetching = "error"; error.set(e);wait(2000).then(() => (fetching = null));})
             console.log(e);
           });
       }
     } catch (e) {
+        error.set(e);
       console.log(e);
       return;
     }
