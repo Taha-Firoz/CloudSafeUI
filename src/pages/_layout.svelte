@@ -1,5 +1,5 @@
 <script>
-  import { TextInput, Button, InlineLoading } from "carbon-components-svelte";
+  import { TextInput, Button, InlineLoading, PasswordInput } from "carbon-components-svelte";
   import Theme from "../components/Theme.svelte";
   import { axiosAPI, wait } from "../init_axios";
   import { json_policy_data } from "../stores.js";
@@ -43,7 +43,7 @@
             placeholder="Access Key ID" />
         </div>
         <div class="flex-1 w-1/4">
-          <TextInput
+          <PasswordInput
             disabled={ fetching !== null}
             bind:value={sec_keys}
             hideLabel
