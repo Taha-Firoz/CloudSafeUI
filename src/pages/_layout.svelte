@@ -1,8 +1,9 @@
 <script>
   import { TextInput, Button, InlineLoading, PasswordInput } from "carbon-components-svelte";
   import Theme from "../components/Theme.svelte";
+  import { slide } from 'svelte/transition';
   import { axiosAPI, wait } from "../init_axios";
-  import { json_policy_data } from "../stores.js";
+  import { json_policy_data, error } from "../stores.js";
 
   let ac_keys = "",
     sec_keys = "",
@@ -19,11 +20,20 @@
       })
       .catch((e) => {
         fetching = "error";
+        error.set(e);
         wait(2000).then(() => (fetching = null));
         console.log(e);
       });
   }
 </script>
+
+{#if $error}
+    <div class="absolute h-8 w-full text-center z-50" transition:slide|local>
+        <button on:click={()=>error.set(null)} class="w-full bg-red-800 py-2">
+            <span class="inline-block text-white font-bold text-md">Whoops: <span class="font-normal">{$error}</span> :/</span>
+        </button>
+    </div>
+{/if}
 
 <Theme persist theme="g90">
   <div class="flex flex-col h-screen min-h-0">
