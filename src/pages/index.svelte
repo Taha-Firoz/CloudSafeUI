@@ -1,18 +1,15 @@
 <script>
   import { metatags } from "@roxi/routify";
   import jsoneditor from "jsoneditor";
+  import { onDestroy } from "svelte";
   metatags.title = "CloudSafe Editor";
   metatags.description = "The Cloudsafe Policy Editor";
   import { Button, Modal, DataTable, Pagination } from "carbon-components-svelte";
-  import * as data from "./user_policies.json";
+  import { json_policy_data } from '../stores.js';
 
   let open = false;
 
-  const headers = [
-    { key: "name", value: "Name" },
-    { key: "port", value: "Port" },
-    { key: "rule", value: "Rule" }
-  ];
+  const headers = [];
 
   const all_rows = [];
 
@@ -21,30 +18,33 @@
   const response = [
     {
       title: "Conflicts",
-      value: "35",
-      meta: [
-      ],
+      value: "?",
+      meta: [],
     },
     {
       title: "Redundancies",
-      value: "17",
-      meta: [
-        "arn:aws:iam::aws:policy/IAMUserChangePassword",
-        "arn:aws:iam::aws:policy/AdministratorAccess",
-      ],
+      value: "?",
+      meta: [],
     },
     {
       title: "Users",
-      value: "3",
-      meta: ["UzmaBibi", "hooria", "talal"],
+      value: "?",
+      meta: [],
     },
     {
       title: "Groups",
-      value: "2",
-      meta: ["activeStudents", "Administrators"],
+      value: "?",
+      meta: [],
     },
   ];
-  let json = data;
+
+  let ace_editor = null;
+
+  const unsubscribe = json_policy_data.subscribe((value)=>{
+      if(ace_editor){
+        ace_editor.set(value);
+      }
+  })
 
   function attach(e) {
     const editor = new jsoneditor(e, {
@@ -52,12 +52,14 @@
       theme: "ace/theme/twilight",
       mainMenuBar: false,
     });
-    editor.set(json);
+    ace_editor = editor;
+    editor.set(["Import your policy with your credentials","or","Paste your policy here"]);
   }
 
   function paginate({page, pageSize}){
     paginated_rows = all_rows.slice((page-1)*pageSize, page*pageSize)
   }
+  onDestroy(unsubscribe);
 </script>
 
 <svelte:head>
@@ -84,15 +86,17 @@
     <div class="grid grid-cols-2 gap-10 ">
       {#each response as item, i}
         <div
-          class="group w-48 h-32 bg-white hover:shadow-2xl hover:bg-cablue-60 p-4 cursor-pointer">
+          class="group w-48 h-32 bg-white p-4 {item.title === "Redundancies"? "": "cursor-pointer hover:shadow-2xl hover:bg-cablue-60"}">
           <div
             class="flex flex-col justify-between h-full"
             on:click={() => {
-              open = true;
-              paginate(e)
+                if(item.title !== "Redundancies"){
+                    open = true;
+                    paginate({page: 1, pageSize: 10})
+                }
             }}>
-            <span class="font-bold text-carbon-100 group-hover:text-white text-lg">{item.title}</span>
-            <span class="font-bold text-carbon-100 group-hover:text-white text-5xl text-right">{item.value}</span>
+            <span class="font-bold text-carbon-100 {item.title === "Redundancies"? "": "group-hover:text-white"} text-lg">{item.title}</span>
+            <span class="font-bold text-carbon-100 {item.title === "Redundancies"? "": "group-hover:text-white"} text-5xl text-right">{item.value}</span>
           </div>
         </div>
       {/each}
