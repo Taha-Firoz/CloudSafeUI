@@ -39,6 +39,7 @@ $feature-flags: (
 
   /* import individual components SCSS */
   @import "carbon-components/scss/components/button/button";
+  @import "carbon-components/scss/components/inline-loading/inline-loading";
   @import "carbon-components/scss/components/text-input/text-input";
   @import "carbon-components/scss/components/inline-loading/inline-loading";
   @import "carbon-components/scss/components/modal/modal";
