@@ -93,16 +93,12 @@
       } else {
         fetching = "active";
         axiosAPI
-          .post("/anomalies/conflicts", JSON.parse(ace_editor.getText()))
+          .post("/anomalies/check", JSON.parse(ace_editor.getText()))
           .then((res) => {
-            wait(2000).then(()=>{fetching = "finished";response = res.data;
-            response.splice(1, 0, {
-              title: "Redundancies",
-              value: "?",
-              meta: {},
-            });wait(2000).then(() => (fetching = null));})
-            
-            
+            wait(2000).then(()=>{
+            fetching = "finished";
+            response = res.data;
+            wait(2000).then(() => (fetching = null));})
           })
           .catch((e) => {
             wait(2000).then(()=>{fetching = "error"; error.set(e);wait(2000).then(() => (fetching = null));})
@@ -153,12 +149,13 @@
     <div class="grid grid-cols-2 gap-10 ">
       {#each response as item, i}
         <div
-          class="group w-48 h-32 bg-white p-4 {item.title === 'Redundancies' || item.value === '?' ? 'bg-gray-400 cursor-not-allowed' : 'cursor-pointer hover:shadow-2xl hover:bg-cablue-60'}">
+      class:cursor-pointer="{item.value !== '?'}"
+          class="group w-48 h-32 bg-white p-4 cursor-pointer hover:bg-gray-200 hover:bg-cablue-60'">
           <div
             class="flex flex-col justify-between h-full"
             on:click={() => {
-              if (!(item.title === 'Redundancies' || item.value === '?')) {
-                item.title === 'Conflicts'? open_weirdo = true: open = true;
+              if (!(item.value === '?')) {
+                item.title === 'Conflicts' || item.title === "Redundancies" ? open_weirdo = true: open = true;
                 heading = item.title;
                 headers = item.meta.headers;
                 all_rows = item.meta.values;
@@ -166,9 +163,9 @@
               }
             }}>
             <span
-              class="font-bold text-carbon-100 {item.title === 'Redundancies' || item.value === '?' ? '' : 'group-hover:text-white'} text-lg">{item.title}</span>
+              class="font-bold text-carbon-100 'group-hover:text-white' text-lg">{item.title}</span>
             <span
-              class="font-bold text-carbon-100 {item.title === 'Redundancies' || item.value === '?' ? '' : 'group-hover:text-white'} text-5xl text-right">{item.value}</span>
+              class="font-bold text-carbon-100 'group-hover:text-white' text-5xl text-right">{item.value}</span>
           </div>
         </div>
       {/each}
