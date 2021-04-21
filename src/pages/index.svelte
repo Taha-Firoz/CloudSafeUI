@@ -75,11 +75,23 @@
       } else {
         fetching = "active";
         axiosAPI
-          .post("/anomalies/check", JSON.parse(editor.getText()))
+          .post("/anomalies/check", {"raw": editor.getText(), "processed": JSON.parse(editor.getText())})
           .then((res) => {
             wait(2000).then(()=>{
             fetching = "finished";
             response = res.data;
+            console.log(response)
+            // const [data_1] = response.filter((e)=> e.title === "Redundancies");
+            // const redundancy_errors = data_1.meta.values.map((row)=>{
+            //         return {
+            //             startLineNumber: row.RedundantActions.line + 1,
+            //             startColumn: row.RedundantActions.total_length - row.RedundantActions.length - 2,
+            //             endColumn: row.RedundantActions.total_length-1,
+            //             message: `Redundant with root action ${row.RedundantActions.PolicyName}/${row.RootActions}`,
+            //         }
+            //     })
+            // editor.setError(redundancy_errors);
+            // console.log(redundancy_errors);
             wait(2000).then(() => (fetching = null));})
           })
           .catch((e) => {
