@@ -1,6 +1,6 @@
 <script>
   import { metatags } from "@roxi/routify";
-  import jsoneditor from "jsoneditor";
+  import Editor from "./_components/editor.svelte";
   import { onDestroy } from "svelte";
   metatags.title = "CloudSafe Editor";
   metatags.description = "The Cloudsafe Policy Editor";
@@ -16,6 +16,8 @@
 
   let open = false;
   let open_weirdo = false;
+
+  let editor;
 
   let heading = "";
 
@@ -50,27 +52,10 @@
     },
   ];
 
-  let ace_editor = null;
-
-  const unsubscribe = json_policy_data.subscribe((value) => {
-    if (ace_editor) {
-      ace_editor.set(value);
-    }
-  });
-
-  function initJsonEditor(e) {
-    const editor = new jsoneditor(e, {
-      mode: "code",
-      theme: "ace/theme/twilight",
-      mainMenuBar: false,
-    });
-    ace_editor = editor;
-    editor.set([
-      "Import your policy with your credentials",
-      "or",
-      "Paste your policy here",
-    ]);
-  }
+//   const unsubscribe = json_policy_data.subscribe((value) => { 
+        
+//         editor.setText(value);
+//   });
 
   function paginate({ page, pageSize }) {
     try{
@@ -81,11 +66,8 @@
   }
 
   function checkPolicy() {
-    if(!ace_editor){
-        error.set("Editor not initialized");
-    }
     try {
-      const parsed = JSON.parse(ace_editor.getText());
+      const parsed = JSON.parse(editor.getText());
 
       if (Array.isArray(parsed)) {
           error.set('Invalid policy format')
@@ -93,7 +75,7 @@
       } else {
         fetching = "active";
         axiosAPI
-          .post("/anomalies/check", JSON.parse(ace_editor.getText()))
+          .post("/anomalies/check", JSON.parse(editor.getText()))
           .then((res) => {
             wait(2000).then(()=>{
             fetching = "finished";
@@ -111,23 +93,13 @@
       return;
     }
   }
-  onDestroy(unsubscribe);
+//   onDestroy(unsubscribe);
 </script>
-
-<svelte:head>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.1.1/jsoneditor.min.css" />
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.1.1/img/jsoneditor-icons.svg"> -->
-  <meta charset="utf-8" />
-  <script src="https://rawgit.com/thlorenz/brace/master/theme/twilight.js">
-  </script>
-</svelte:head>
 
 <div class="h-full w-full flex" theme="g90">
   <div
     class="flex flex-col w-1/3 h-full border-r-2 border-solid border-carbon-90">
-    <div class="flex bg-carbon-80 p-2 justify-between items-center">
+    <div class="flex w-full bg-carbon-80 p-2 justify-between items-center">
       <span class="font-bold ml-4 inline-flex align-middle">
         AWS IAM Policies (JSON)
       </span>
@@ -143,7 +115,9 @@
         {/if}
       </div>
     </div>
-    <div id="jsoneditor" use:initJsonEditor class="flex-1" />
+    <div class="min-h-0 h-full overflow-y-hidden">
+        <Editor bind:model={editor}/>
+    </div>
   </div>
   <div class="grid w-2/3 bg-carbon-100 place-items-center">
     <div class="grid grid-cols-2 gap-10 ">
