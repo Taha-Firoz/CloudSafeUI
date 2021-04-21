@@ -41,7 +41,7 @@
    },
    "dependencies": {
       "@roxi/routify": "^2.1.4-next-major",
-      "axios": "^0.21.0",
+      "axios": "^0.21.1",
       "@monaco-editor/loader": "^1.0.1",
       "fs-extra": "^9.0.1",
       "node-sass": "^4.14.1",
