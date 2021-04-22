@@ -52,10 +52,11 @@
         },
     ];
 
-    //   const unsubscribe = json_policy_data.subscribe((value) => {
-
-    //         editor.setText(value);
-    //   });
+      const unsubscribe = json_policy_data.subscribe((value) => {
+        if(editor){
+            editor.setText(value);
+        }
+      });
 
     function paginate({ page, pageSize }) {
         try {
@@ -71,6 +72,7 @@
     function checkPolicy() {
         try {
             editor.formatText();
+            const text = editor.getText();
             const parsed = JSON.parse(editor.getText());
 
             if (Array.isArray(parsed)) {
@@ -80,8 +82,8 @@
                 fetching = "active";
                 axiosAPI
                     .post("/anomalies/check", {
-                        raw: editor.getText(),
-                        processed: JSON.parse(editor.getText()),
+                        raw: text,
+                        processed: JSON.parse(text),
                     })
                     .then((res) => {
                         wait(2000).then(() => {
@@ -93,8 +95,8 @@
                             const redundancy_errors = merged.map((e)=>{
                                     return {
                                         startLineNumber: e.Action.line + 1,
-                                        startColumn: e.Action.total_length - e.Action.length - 2,
-                                        endColumn: e.Action.total_length-1,
+                                        startColumn: e.Action.total_length - e.Action.length - 1,
+                                        endColumn: e.Action.total_length,
                                         message: `Redundant by Policy: ${e.RedundantActions[0].PolicyName.split('/')[1]}\nAction: ${e.RedundantActions[0].Action}\nResource: ${e.RedundantActions[0].Resource} (line: ${e.RedundantActions[0].line+1})`,
                                     }
                                 })
@@ -118,7 +120,7 @@
             return;
         }
     }
-    //   onDestroy(unsubscribe);
+      onDestroy(unsubscribe);
 </script>
 
 <div class="h-full w-full flex overflow-y-hidden" theme="g90">

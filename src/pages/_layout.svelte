@@ -14,7 +14,7 @@
     axiosAPI
       .post("policies", { ACCESS_KEY: ac_keys, SECRET_KEY: sec_keys })
       .then((res) => {
-        json_policy_data.update(() => res.data);
+        json_policy_data.update(() => JSON.stringify(res.data));
         fetching = "finished";
         wait(2000).then(() => (fetching = null));
       })
